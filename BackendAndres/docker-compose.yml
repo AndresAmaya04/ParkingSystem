@@ -1,0 +1,46 @@
+version: '1.0'
+
+services:
+  backendandres1-1:
+    container_name: back01-1
+    image: back01inicio1
+    build: 
+      context: .
+    ports:
+      - "4001:4000"
+    environment:
+      - EXTERNAL_PORT=4001
+      - PGUSER=postgres
+      - PGPASSWORD=1234
+      - PGDATABASE=parqueadero
+      - PSQL_HOST=host.docker.internal
+
+  backendandres2:
+    container_name: back02
+    image: back01inicio2
+    build: 
+      context: .
+    ports:
+      - "4002:4000"
+    environment:
+      - EXTERNAL_PORT=4002
+      - PGUSER=postgres
+      - PGPASSWORD=1234
+      - PGDATABASE=parqueadero
+      - PSQL_HOST=host.docker.internal
+
+  backendandres3:
+    container_name: back03
+    image: back01inicio3
+    build: 
+      context: .
+    ports:
+      - "4003:4000"
+    environment:
+      - EXTERNAL_PORT=4003
+      - PGUSER=postgres
+      - PGPASSWORD=1234
+      - PGDATABASE=parqueadero
+      - PSQL_HOST=host.docker.internal
+
+

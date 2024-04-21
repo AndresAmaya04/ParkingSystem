@@ -1,0 +1,72 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Socket.io Client</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+    <h1>Datos de los endpoints</h1>
+    <ul id="data-list"></ul>
+
+    <!-- Aquí es donde se renderizarán las gráficas -->
+    <div id="charts"></div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.4.0/socket.io.js"></script>
+    <script>
+        const socket = io("http://localhost:3000"); // Asegúrate de cambiar la URL si el servidor de socket está en un puerto diferente
+        const dataList = document.getElementById("data-list");
+        const chartsContainer = document.getElementById("charts");
+
+        socket.on("connect", () => {
+            console.log("Conexión establecida con el servidor de socket");
+        });
+
+        socket.on("carsData", (data) => {
+    dataList.innerHTML = ""; // Limpiar la lista antes de agregar nuevos datos
+    chartsContainer.innerHTML = ""; // Limpiar el contenedor de las gráficas antes de agregar nuevas
+
+    data.forEach((endpointData, index) => {
+        const li = document.createElement("li");
+        li.textContent = `Back ${index + 1}: ${endpointData.time}`;
+        dataList.appendChild(li);
+
+        // Crear un nuevo canvas para la gráfica
+        const canvas = document.createElement("canvas");
+        canvas.id = `chart-${index}`; // Dar un ID único a cada gráfica
+        chartsContainer.appendChild(canvas);
+
+        // Configurar y renderizar la gráfica
+        renderChart(`chart-${index}`, endpointData.time);
+    });
+});
+
+// Función para renderizar una gráfica usando Chart.js
+function renderChart(canvasId, data) {
+    const ctx = document.getElementById(canvasId).getContext("2d");
+    new Chart(ctx, {
+        type: "line",
+        data: {
+            labels: data.map((value, index) => index + 1), // Generar etiquetas numéricas
+            datasets: [{
+                label: "Data",
+                data: data, // Utilizar directamente los datos recibidos
+                borderColor: "rgb(75, 192, 192)",
+                borderWidth: 1
+            }]
+        },
+        options: {
+            scales: {
+                y: {
+                    beginAtZero: true
+                }
+            }
+        }
+    });
+}
+    </script>
+</body>
+</html>
+

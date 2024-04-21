@@ -1,0 +1,35 @@
+version: '3'
+
+services:
+  backend222:
+    container_name: back04
+    image: back01inicio
+    build: 
+      context: .
+    ports:
+      - "4005:4005"
+    environment:
+      - EXTERNAL_PORT=4005
+      - PGUSER=postgres
+      - PGPASSWORD=123
+      - PGDATABASE=cars
+      - PGHOST=cars_db
+    depends_on:
+      - cars_db
+    networks:
+      - backend_network
+
+  cars_db:
+    container_name: andres
+    image: "postgres:12"  
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=123
+      - POSTGRES_DB=cars
+    networks:
+      - backend_network
+
+networks:
+  backend_network:
+    driver: bridge
+
